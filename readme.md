@@ -1,6 +1,6 @@
 # 🤖 Autonomous AI Workforce Agent
 
-> An AI-powered multi-agent system that thinks, plans, and executes tasks like a junior employee — not just a chatbot.
+> An AI-powered multi-agent system that thinks, plans, and executes tasks like a junior employee, not just a chatbot.
 
 Built using Python, Groq (LLaMA 3.3 70B), ChromaDB RAG, and Streamlit.
 
@@ -198,4 +198,3 @@ Tracks execution state as key-value pairs (e.g. `leave_applied: true`, `email_se
 
 ## 👤 Author
 **Arfa Faheem**
-Internship Technical Challenge Submission
