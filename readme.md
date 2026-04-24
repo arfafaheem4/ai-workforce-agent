@@ -196,11 +196,6 @@ Tracks execution state as key-value pairs (e.g. `leave_applied: true`, `email_se
 
 ---
 
-## 📹 Demo Video
-[Demo Video](https:)
-
----
-
 ## 👤 Author
 **Arfa Faheem**
 Internship Technical Challenge Submission
