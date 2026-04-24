@@ -8,18 +8,26 @@ execution_state = {
     "meeting_scheduled": False,
 }
 
-# Track which states are relevant for current goal
 relevant_states = set()
+_current_goal = ""          # ← add this
+_last_action = None
+_last_action_params = {}
+
+def set_current_goal(goal: str):
+    global _current_goal
+    _current_goal = goal
+
+def get_current_goal() -> str:
+    return _current_goal
 
 def set_state(key: str, value: bool):
     execution_state[key] = value
-    relevant_states.add(key)  # Mark as relevant when used
+    relevant_states.add(key)
 
 def get_state(key: str) -> bool:
     return execution_state.get(key, False)
 
 def get_full_state() -> dict:
-    # Only return states that were actually used
     if relevant_states:
         return {k: v for k, v in execution_state.items() if k in relevant_states}
     return execution_state.copy()
@@ -27,11 +35,12 @@ def get_full_state() -> dict:
 def reset_state():
     for key in execution_state:
         execution_state[key] = False
-    relevant_states.clear()  # Clear relevance tracking
+    relevant_states.clear()
 
-def get_state_summary() -> str:
-    lines = []
-    for key, value in execution_state.items():
-        status = "✅ Done" if value else "❌ Not done"
-        lines.append(f"  {key}: {status}")
-    return "\n".join(lines)
+def set_last_action(action: str, params: dict):
+    global _last_action, _last_action_params
+    _last_action = action
+    _last_action_params = params
+
+def get_last_action():
+    return _last_action, _last_action_params

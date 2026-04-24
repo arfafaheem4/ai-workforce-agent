@@ -112,6 +112,8 @@ if run_button and goal.strip():
     # ── New Goal ───────────────────────────────────────────────
     else:
         reset_state()
+        from state_manager import set_current_goal
+        set_current_goal(goal)
         save_goal(goal)
         log_interaction("user", goal)
 

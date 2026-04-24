@@ -1,9 +1,12 @@
 # tools/tools.py
 import json
 import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from datetime import datetime
 from tools.retriever import retrieve
-from state_manager import set_state, get_state
+from state_manager import set_state, get_state, set_last_action
 
 LEAVE_FILE = "memory/leave_requests.json"
 TASKS_LOG_FILE = "memory/tasks_log.json"
@@ -18,25 +21,29 @@ def _save_json(filepath, data):
     with open(filepath, "w") as f:
         json.dump(data, f, indent=2)
 
-def apply_leave(task: str) -> str:
-    # Check state — not session flag
+def apply_leave(task: str, context: str = "") -> str:
     if get_state("leave_applied"):
         return "[HR Tool] ℹ️ Leave already applied — skipping duplicate."
 
-    task_lower = task.lower()
+    # ── Use original goal for day detection ───────────────────
+    from state_manager import get_current_goal
+    combined = (task + " " + context + " " + get_current_goal()).lower()
 
-    days = 1
-    for word in task_lower.split():
-        if word.isdigit():
-            days = int(word)
-            break
-    if "3 days" in task_lower: days = 3
-    elif "2 days" in task_lower: days = 2
-    elif "week" in task_lower: days = 5
+    if "3 days" in combined or "three days" in combined: days = 3
+    elif "2 days" in combined or "two days" in combined: days = 2
+    elif "4 days" in combined or "four days" in combined: days = 4
+    elif "5 days" in combined or "five days" in combined: days = 5
+    elif "week" in combined: days = 5
+    else:
+        days = 1
+        for word in combined.split():
+            if word.isdigit():
+                days = int(word)
+                break
 
-    if "emergency" in task_lower: leave_type = "Emergency"
-    elif "sick" in task_lower: leave_type = "Sick"
-    elif "annual" in task_lower: leave_type = "Annual"
+    if "emergency" in combined: leave_type = "Emergency"
+    elif "sick" in combined: leave_type = "Sick"
+    elif "annual" in combined: leave_type = "Annual"
     else: leave_type = "General"
 
     leave_request = {
@@ -52,8 +59,8 @@ def apply_leave(task: str) -> str:
     requests.append(leave_request)
     _save_json(LEAVE_FILE, requests)
 
-    # Update state
     set_state("leave_applied", True)
+    set_last_action("apply_leave", {"days": days, "leave_type": leave_type})
 
     return (
         f"[HR Tool] ✅ Leave Applied Successfully!\n"
@@ -61,6 +68,31 @@ def apply_leave(task: str) -> str:
         f"   🏖️  Type: {leave_type}\n"
         f"   📅 Days: {days}\n"
         f"   ✅ Status: Approved"
+    )
+
+def update_leave(task: str, days: int) -> str:
+    """Updates the most recent leave request with new duration."""
+    requests = _load_json(LEAVE_FILE)
+
+    if not requests:
+        return "[HR Tool] ⚠️ No previous leave request found to update."
+
+    last = requests[-1]
+    old_days = last["days_requested"]
+    last["days_requested"] = days
+    last["updated_at"] = datetime.now().isoformat()
+    last["status"] = "Updated & Approved"
+
+    _save_json(LEAVE_FILE, requests)
+
+    set_state("leave_applied", True)
+    set_last_action("apply_leave", {"days": days})
+
+    return (
+        f"[HR Tool] ✅ Leave Updated Successfully!\n"
+        f"   📋 ID: {last['id']}\n"
+        f"   📅 Changed: {old_days} day(s) → {days} day(s)\n"
+        f"   ✅ Status: Updated & Approved"
     )
 
 def log_handover_task(task: str) -> str:
@@ -79,8 +111,8 @@ def log_handover_task(task: str) -> str:
     logs.append(handover)
     _save_json(TASKS_LOG_FILE, logs)
 
-    # Update state
     set_state("handover_logged", True)
+    set_last_action("log_handover", {"task": task})  # ← track action
 
     return (
         f"[Task Manager] ✅ Handover Task Logged!\n"
@@ -125,3 +157,4 @@ def execute_tool(task_type: str, task: str) -> str:
         if "handover" in task_lower:
             return log_handover_task(task)
         return f"[General Tool] ⚙️ Handled: {task}"
+        
