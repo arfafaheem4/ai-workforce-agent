@@ -2,7 +2,7 @@
 
 > An AI-powered multi-agent system that thinks, plans, and executes tasks like a junior employee — not just a chatbot.
 
-Built as an internship technical challenge submission using Python, Groq (LLaMA 3.3 70B), ChromaDB RAG, and Streamlit.
+Built using Python, Groq (LLaMA 3.3 70B), ChromaDB RAG, and Streamlit.
 
 ---
 
