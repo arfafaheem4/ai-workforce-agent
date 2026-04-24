@@ -1,0 +1,9 @@
+streamlit
+chromadb
+faiss-cpu
+numpy
+pandas
+requests
+python-dotenv
+openai
+groq

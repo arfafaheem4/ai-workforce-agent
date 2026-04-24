@@ -1,0 +1,24 @@
+COMPANY POLICY - LEAVE MANAGEMENT
+Employees can apply for leave via the HR portal.
+Annual leave quota is 20 days per year.
+Leave requests must be submitted at least 3 days in advance.
+Emergency leave can be applied same day with manager approval.
+Handover document must be submitted before any leave exceeding 2 days.
+
+COMPANY POLICY - MEETINGS
+All client meetings must have an agenda shared 24 hours before.
+Meeting notes must be recorded and shared within 2 hours after the meeting.
+Virtual meetings require a stable internet connection and professional background.
+Client meetings must include at least one senior team member.
+
+COMPANY POLICY - HR
+New employees complete a 3-month probation period.
+Performance reviews are conducted every 6 months.
+Training budget is $500 per employee per year.
+Remote work is allowed up to 2 days per week.
+
+COMPANY POLICY - PROJECTS
+All projects must have a designated project lead.
+Weekly status updates must be shared with the team every Monday.
+Project deadlines must be approved by the project manager.
+Code reviews are mandatory before any deployment.

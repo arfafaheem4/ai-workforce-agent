@@ -1,0 +1,16 @@
+# Environment
+venv/
+.env
+
+# Memory / Local storage (important for your agent)
+memory/memory.json
+memory/leave_requests.json
+memory/tasks_log.json
+memory/chroma_store/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# System files
+.DS_Store
